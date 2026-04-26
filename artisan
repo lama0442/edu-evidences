@@ -1,21 +1,21 @@
 <?php
 
-use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Http\Request;
-
 define('LARAVEL_START', microtime(true));
 
-// 1. تعديل مسار الـ Autoloader (أضفنا ../ إضافية)
-require __DIR__.'/../../vendor/autoload.php';
+// 1. استدعاء الـ Autoloader (تأكدي أنه vendor وليس forels)
+require __DIR__.'/vendor/autoload.php';
 
-// 2. تعديل مسار الـ Bootstrap (أضفنا ../ إضافية لكي يخرج من مجلد api)
-$app = require_once __DIR__.'/../../bootstrap/app.php';
+// 2. تشغيل بيئة العمل
+$app = require_once __DIR__.'/bootstrap/app.php';
 
-// تشغيل التطبيق
-$kernel = $app->make(Kernel::class);
+// 3. تشغيل الأوامر
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 
-$response = $kernel->handle(
-    $request = Request::capture()
-)->send();
+$status = $kernel->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
 
-$kernel->terminate($request, $response);
+$kernel->terminate($input, $status);
+
+exit($status);

@@ -1,0 +1,7 @@
+{
+    "version": 2,
+    "plugins": ["@vercel/php"],
+    "routes": [
+        { "src": "/(.*)", "dest": "/public/index.php" }
+    ]
+}
