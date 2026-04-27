@@ -1,0 +1,20 @@
+# nixpacks.toml
+
+[variables]
+    APACHE_MPM_MODULE = 'prefork'
+    NIXPACKS_PHP_SERVER_TYPE = 'nginx'
+
+[phases.setup]
+    nixPkgs = ['...', 'php82', 'php82Packages.composer']
+
+[phases.build]
+    dependsOn = ['setup']
+    cmds = [
+        'composer install --no-interaction --optimize-autoloader',
+        'php artisan config:clear',
+        'php artisan route:clear',
+        'php artisan view:clear'
+    ]
+
+[start]
+    cmd = 'php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT'
